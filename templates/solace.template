@@ -20,8 +20,9 @@
                         "UsePrivateSubnets",
                         "PublicSubnetIDs",
                         "PrivateSubnetIDs",
+                        "ServiceExposureType",
                         "SSHSecurityGroupID",
-                        "RemoteAccessCIDR"
+                        "ServicesAccessCIDR"
                     ]
                 },
                 {
@@ -78,8 +79,8 @@
                 "NumberOfAZs": {
                     "default": "Number of Availability Zones to use"
                 },
-                "RemoteAccessCIDR": {
-                    "default": "Allowed External Access CIDR"
+                "ServicesAccessCIDR": {
+                    "default": "Services Access CIDR"
                 },
                 "SSHSecurityGroupID": {
                     "default": "Security group allowed to access console SSH"
@@ -95,6 +96,9 @@
                 },
                 "PublicSubnetIDs": {
                     "default": "Public Subnet IDs"
+                },
+                "ServiceExposureType": {
+                    "default": "Service exposure"
                 },
                 "QSS3BucketName": {
                     "default": "Quick Start S3 Bucket Name"
@@ -203,10 +207,10 @@
             ],
             "Type": "Number"
         },
-        "RemoteAccessCIDR": {
+        "ServicesAccessCIDR": {
             "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
             "ConstraintDescription": "CIDR block parameter must be in the form x.x.x.x/x",
-            "Description": "Allowed CIDR block for external access to cluster nodes",
+            "Description": "Allowed CIDR block for access to cluster nodes - specify even if using private addresses",
             "Type": "String"
         },
         "SSHSecurityGroupID": {
@@ -219,16 +223,27 @@
                 "false"
             ],
             "Default": "true",
-            "Description": "Whether to use Private Subnets with fronting Bastion Servers",
+            "Description": "Whether to use Private Subnets for the deployment",
+            "Type": "String"
+        },
+        "PublicSubnetIDs": {
+            "Description": "Comma separated list of VPC public subnet IDs for the cluster deployment (e.g. subnet-4b8d329f,subnet-bd73afc8); VPC must exist with proper configuration for Solace cluster access. Note: This will be ignored if 'Use private subnets' is set to 'true'",
+            "Default": "",
             "Type": "String"
         },
         "PrivateSubnetIDs": {
             "Description": "Comma separated list of VPC private subnet IDs for the cluster deployment (e.g. subnet-4b8d329f,subnet-bd73afc8); VPC must exist with proper configuration for Solace cluster access. Note: This will be ignored if 'Use private subnets' is set to 'false'",
-            "Type": "List<AWS::EC2::Subnet::Id>"
+            "Default": "",
+            "Type": "String"
         },
-         "PublicSubnetIDs": {
-            "Description": "Comma separated list of VPC public subnet IDs for the cluster deployment (e.g. subnet-4b8d329f,subnet-bd73afc8); VPC must exist with proper configuration for Solace cluster access",
-            "Type": "List<AWS::EC2::Subnet::Id>"
+        "ServiceExposureType": {
+            "AllowedValues": [
+                "internet-facing",
+                "internal"
+            ],
+            "Default": "internet-facing",
+            "Description": "Defines if the message router services are publicly exposed or only accessible internally from the VPC",
+            "Type": "String"
         },
         "VPCID": {
             "Description": "ID of the VPC (e.g. vpc-0343606e)",
@@ -326,6 +341,12 @@
             "Fn::Equals": [
                 { "Ref": "UsePrivateSubnets" },
                 "true"
+            ]
+        },
+        "PubliclyExposedServiceCondition": {
+            "Fn::Equals": [
+                { "Ref": "ServiceExposureType" },
+                "internet-facing"
             ]
         },
         "GovCloudCondition": {
@@ -498,8 +519,8 @@
                             { 
                                 "Fn::If": [
                                     "UsePrivateSubnetsCondition",
-                                    { "Ref": "PrivateSubnetIDs" }, 
-                                    { "Ref": "PublicSubnetIDs" }
+                                    {"Fn::Split" : [ "," , {"Ref" : "PrivateSubnetIDs"} ]},
+                                    {"Fn::Split" : [ "," , {"Ref" : "PublicSubnetIDs"} ]}
                                     ] 
                             }
                         ]
@@ -579,8 +600,8 @@
                             { 
                                 "Fn::If": [
                                     "UsePrivateSubnetsCondition",
-                                    { "Ref": "PrivateSubnetIDs" }, 
-                                    { "Ref": "PublicSubnetIDs" }
+                                    {"Fn::Split" : [ "," , {"Ref" : "PrivateSubnetIDs"} ]},
+                                    {"Fn::Split" : [ "," , {"Ref" : "PublicSubnetIDs"} ]}
                                     ] 
                             }
                         ]
@@ -657,8 +678,8 @@
                             { 
                                 "Fn::If": [
                                     "UsePrivateSubnetsCondition",
-                                    { "Ref": "PrivateSubnetIDs" }, 
-                                    { "Ref": "PublicSubnetIDs" }
+                                    {"Fn::Split" : [ "," , {"Ref" : "PrivateSubnetIDs"} ]},
+                                    {"Fn::Split" : [ "," , {"Ref" : "PublicSubnetIDs"} ]}
                                     ] 
                             }
                         ]
@@ -780,7 +801,7 @@
                                 "IpProtocol": "tcp",
                                 "FromPort": "22",
                                 "ToPort": "22",                             
-                                "CidrIp": { "Ref": "RemoteAccessCIDR" } 
+                                "CidrIp": { "Ref": "ServicesAccessCIDR" } 
                             }
                         ]
                     }
@@ -800,7 +821,7 @@
                         "FromPort": "55555",
                         "ToPort": "55555",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -808,7 +829,7 @@
                         "FromPort": "55003",
                         "ToPort": "55003",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -816,7 +837,7 @@
                         "FromPort": "8000",
                         "ToPort": "8000",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -824,7 +845,7 @@
                         "FromPort": "5672",
                         "ToPort": "5672",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -832,7 +853,7 @@
                         "FromPort": "9000",
                         "ToPort": "9000",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -840,7 +861,7 @@
                         "FromPort": "1883",
                         "ToPort": "1883",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -848,7 +869,7 @@
                         "FromPort": "8080",
                         "ToPort": "8080",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     },
                     {
@@ -856,7 +877,7 @@
                         "FromPort": "80",
                         "ToPort": "80",
                         "CidrIp": {
-                            "Ref": "RemoteAccessCIDR"
+                            "Ref": "ServicesAccessCIDR"
                         }
                     }
                 ]
@@ -886,11 +907,17 @@
                     { "Ref" : "MessageBrokerSecurityGroup" },
                     { "Ref" : "SolaceInternalSecurityGroupMember" }
                 ],
-                "Subnets" : { "Ref": "PublicSubnetIDs" },
+                "Subnets" : {
+                    "Fn::If": [
+                        "PubliclyExposedServiceCondition",
+                        {"Fn::Split" : [ "," , {"Ref" : "PublicSubnetIDs"} ]},
+                        {"Fn::Split" : [ "," , {"Ref" : "PrivateSubnetIDs"} ]}
+                        ] 
+                },
+                "Scheme" : { "Ref": "ServiceExposureType" },
                 "Instances" : [
                     {"Fn::GetAtt": ["MessageBrokerPrimaryStack","Outputs.EC2ID"]},
-                    {"Fn::GetAtt": ["MessageBrokerBackupStack","Outputs.EC2ID"]},
-                    {"Fn::GetAtt": ["MonitorStack","Outputs.EC2ID"]}
+                    {"Fn::GetAtt": ["MessageBrokerBackupStack","Outputs.EC2ID"]}
                 ],
                 "HealthCheck" : {
                     "Target" : {

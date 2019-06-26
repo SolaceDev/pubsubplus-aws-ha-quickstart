@@ -404,6 +404,7 @@
                     "SolaceDockerImage": {
                         "Ref": "SolaceDockerImage"
                     },
+                    "ServiceExposureType": "internet-facing",
                     "AdminPassword": {
                         "Ref": "AdminPassword"
                     },
@@ -434,7 +435,7 @@
                     "QSS3KeyPrefix": {
                         "Ref": "QSS3KeyPrefix"
                     },
-                    "RemoteAccessCIDR": {
+                    "ServicesAccessCIDR": {
                         "Ref": "RemoteAccessCIDR"
                     },
                     "UsePrivateSubnets": {
