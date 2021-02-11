@@ -25,9 +25,6 @@ jobs:
         echo "TESTSTACKPREFIX=$TESTSTACKPREFIX" >> $GITHUB_ENV
         echo "TESTSTACKNAME=$TESTSTACKPREFIX-sol-aws-ghtest" >> $GITHUB_ENV
         #
-        sudo apt-get install jq -y
-        sudo apt-get install -y jsonlint
-        #
         # Cloning the AWS-hosted quickstart
         git clone https://github.com/aws-quickstart/quickstart-solace-pubsub.git
 
@@ -50,7 +47,6 @@ jobs:
 
     - name: Lint yaml templates
       run: |
-        jsonlint-php quickstart-solace-pubsub/templates/*
         aws cloudformation validate-template --template-body file://quickstart-solace-pubsub/templates/solace-master.template
         aws cloudformation validate-template --template-body file://quickstart-solace-pubsub/templates/solace.template
         aws cloudformation validate-template --template-body file://quickstart-solace-pubsub/templates/nodecreate.template
