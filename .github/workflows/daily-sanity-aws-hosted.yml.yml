@@ -26,7 +26,7 @@ jobs:
         echo "TESTSTACKNAME=$TESTSTACKPREFIX-sol-aws-ghtest" >> $GITHUB_ENV
         #
         # Cloning the AWS-hosted quickstart
-        git clone https://github.com/aws-quickstart/quickstart-solace-pubsub.git
+        git clone https://github.com/aws-quickstart/quickstart-solace-pubsub.git -b develop
 
 
     - name: Recourse submodules
