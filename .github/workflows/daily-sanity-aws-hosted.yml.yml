@@ -50,7 +50,7 @@ jobs:
 
     - name: Lint yaml templates
       run: |
-        jsonlint-php quickstart-solace-pubsub/*
+        jsonlint-php quickstart-solace-pubsub/templates/*
         aws cloudformation validate-template --template-body file://quickstart-solace-pubsub/templates/solace-master.template
         aws cloudformation validate-template --template-body file://quickstart-solace-pubsub/templates/solace.template
         aws cloudformation validate-template --template-body file://quickstart-solace-pubsub/templates/nodecreate.template
