@@ -7,4 +7,5 @@ This branch is used for scheduled test runs only.
 Status:
 
 [![Actions Status](https://github.com/SolaceDev/pubsubplus-aws-ha-quickstart/workflows/daily-sanity-master/badge.svg?event=schedule)](https://github.com/SolaceDev/pubsubplus-aws-ha-quickstart/actions?query=workflow%3Adaily-sanity-master)
+[![Actions Status](https://github.com/SolaceDev/pubsubplus-aws-ha-quickstart/workflows/daily-sanity-aws-hosted/badge.svg?event=schedule)](https://github.com/SolaceDev/pubsubplus-aws-ha-quickstart/actions?query=workflow%3Adaily-sanity-aws-hosted)
 
