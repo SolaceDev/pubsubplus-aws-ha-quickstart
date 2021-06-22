@@ -74,6 +74,13 @@ Parameters:
       VPC must exist with proper configuration for Solacet cluster access (internal
       and external) and the subnets must be in the same VPC as the security groups
     Type: AWS::EC2::Subnet::Id
+  AssociatePublicIP:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: Whether to associate a public IP address to this instance
+    Type: String
   NodeSecurityGroup:
     Description: Comma separated list of security groups for the members of the cluster
       (e.g. sg-7f16e910,sg-4be93ca2); The security groups must be in the same VPC
@@ -476,7 +483,7 @@ Resources:
       InstanceType: !Ref 'NodeInstanceType'
       KeyName: !Ref 'KeyPairName'
       NetworkInterfaces:
-        - AssociatePublicIpAddress: true
+        - AssociatePublicIpAddress: !Ref AssociatePublicIP
           DeleteOnTermination: true
           Description: Main interface
           DeviceIndex: '0'
@@ -618,6 +625,6 @@ Outputs:
       Name: !Sub '${AWS::StackName}-PrivateDnsName'
   PublicDNSName:
     Description: Public DNS name of the created ec2 instance
-    Value: !GetAtt BrokerNodeInstance.PublicDnsName
+    Value: !If [!GetAtt AssociatePublicIP, !GetAtt BrokerNodeInstance.PublicDnsName, 'No Public DNS name available']
     Export:
       Name: !Sub '${AWS::StackName}-PublicDNSName'
