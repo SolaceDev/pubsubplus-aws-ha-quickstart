@@ -193,6 +193,9 @@ Conditions:
     - '0'
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   NonHA: !Equals [!Ref NodeDesignation, 'event-broker-singlenode']
+  AssociatePublicIPCondition: !Equals
+    - !Ref 'AssociatePublicIP'
+    - 'true'
 Resources:
   CloudFormationLogs:
     Type: AWS::Logs::LogGroup
@@ -625,6 +628,6 @@ Outputs:
       Name: !Sub '${AWS::StackName}-PrivateDnsName'
   PublicDNSName:
     Description: Public DNS name of the created ec2 instance
-    Value: !If [!GetAtt AssociatePublicIP, !GetAtt BrokerNodeInstance.PublicDnsName, 'No Public DNS name available']
+    Value: !If [AssociatePublicIPCondition, !GetAtt BrokerNodeInstance.PublicDnsName, 'No Public DNS name available']
     Export:
       Name: !Sub '${AWS::StackName}-PublicDNSName'
