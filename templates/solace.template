@@ -296,7 +296,7 @@ Resources:
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3BucketRegion: !Ref 'QSS3BucketRegion'
         QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-        AssociatePublicIP: !Not [!Ref 'VPCAccessOnly']
+        AssociatePublicIP: !Equals [!Ref 'VPCAccessOnly', 'false']
         SubnetID: !Select
           - 0
           - !If
@@ -333,7 +333,7 @@ Resources:
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3BucketRegion: !Ref 'QSS3BucketRegion'
         QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-        AssociatePublicIP: !Not [!Ref 'VPCAccessOnly']
+        AssociatePublicIP: !Equals [!Ref 'VPCAccessOnly', 'false']
         SubnetID: !Select
           - 1
           - !If
@@ -367,7 +367,7 @@ Resources:
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3BucketRegion: !Ref 'QSS3BucketRegion'
         QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-        AssociatePublicIP: !Not [!Ref 'VPCAccessOnly']
+        AssociatePublicIP: !Equals [!Ref 'VPCAccessOnly', 'false']
         SubnetID: !Select
           - !If [Use3AZs, 2, 1]
           - !If [UsePrivateSubnetsCondition, !Ref PrivateSubnetIDs, !Ref PublicSubnetIDs]
