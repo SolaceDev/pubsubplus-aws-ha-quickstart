@@ -47,7 +47,7 @@ Metadata:
       NumberOfAZs:
         default: Number of Availability Zones
       BootDiskSize:
-        default: Boot Disk Capacity (GiB)
+        default: Boot Disk Capacity (GiB)ELE
       MaxClientConnections:
         default: Maximum Number of Client Connections
       MaxQueueMessages:
@@ -530,7 +530,7 @@ Resources:
     Condition: UsePrivateSubnetsCondition
     Properties:
       Scheme: !If [VPCAccessOnlyCondition, 'internal', 'internet-facing']
-      Subnets: !If [VPCAccessOnlyCondition, !Ref AWS::NoValue, !Ref 'PublicSubnetIDs']
+      Subnets: !If [VPCAccessOnlyCondition, !Ref 'PrivateSubnetIDs', !Ref 'PublicSubnetIDs']
       Type: network
   Port55555NetworkLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
