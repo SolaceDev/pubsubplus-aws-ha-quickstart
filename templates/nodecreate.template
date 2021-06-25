@@ -486,7 +486,7 @@ Resources:
       InstanceType: !Ref 'NodeInstanceType'
       KeyName: !Ref 'KeyPairName'
       NetworkInterfaces:
-        - AssociatePublicIpAddress: !Ref AssociatePublicIP
+        - AssociatePublicIpAddress: !If [AssociatePublicIPCondition, 'true', 'false']
           DeleteOnTermination: true
           Description: Main interface
           DeviceIndex: '0'
