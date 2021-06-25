@@ -223,7 +223,9 @@ Parameters:
   PublicSubnetIDs:
     Description: Comma separated list of VPC public subnet IDs for the cluster deployment
       (e.g. subnet-4b8d329f,subnet-bd73afc8); VPC must exist with proper configuration
-      for Solace cluster access
+      for Solace cluster access.
+      IGNORED if 'VPC access only' AND  'use private subnets' both true but even in this case must provide at least one item
+    Default: ''
     Type: List<AWS::EC2::Subnet::Id>
   VPCID:
     Description: ID of the VPC (e.g. vpc-0343606e)
@@ -233,20 +235,20 @@ Parameters:
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
       (-).
-    Default: solace-products
+    Default: solace-cf-quickstart-ghtest2
     Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
     Type: String
   QSS3BucketRegion:
-    Default: 'us-east-1'
+    Default: 'eu-west-2'
     Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slash (/).
-    Default: pubsubplus-aws-ha-quickstart/latest/
+    Default: solace/eventbroker/latest/
     Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
       can include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).

@@ -53,6 +53,7 @@ jobs:
         aws s3 mb s3://${{ env.TEST_S3_BUCKET }} || echo "s3 bucket already existed"
         export BUCKETREGION=`aws s3api get-bucket-location --bucket ${{ env.TEST_S3_BUCKET }} | grep LocationConstraint | awk -F' ' '{print $NF}' | tr -d '"'`
         sed -i "s@SolaceStackRegionNAME@${AWS_DEFAULT_REGION}@g" ci/solace-aws-ha-3az-prod-test.json
+        sed -i "s@SolaceBucketNAME@${{ env.TEST_S3_BUCKET }}@g" ci/solace-aws-ha-3az-prod-test.json
         sed -i "s@SolaceBucketRegionNAME@${BUCKETREGION}@g" ci/solace-aws-ha-3az-prod-test.json
         aws s3 sync . s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/latest --acl public-read
 

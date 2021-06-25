@@ -486,7 +486,7 @@ Resources:
       InstanceType: !Ref 'NodeInstanceType'
       KeyName: !Ref 'KeyPairName'
       NetworkInterfaces:
-        - AssociatePublicIpAddress: !If [AssociatePublicIPCondition, 'true', 'false']
+        - AssociatePublicIpAddress: true
           DeleteOnTermination: true
           Description: Main interface
           DeviceIndex: '0'
@@ -628,6 +628,6 @@ Outputs:
       Name: !Sub '${AWS::StackName}-PrivateDnsName'
   PublicDNSName:
     Description: Public DNS name of the created ec2 instance
-    Value: !If [AssociatePublicIPCondition, !GetAtt BrokerNodeInstance.PublicDnsName, 'No Public DNS name available']
+    Value: !If [AssociatePublicIPCondition, !GetAtt BrokerNodeInstance.PublicDnsName, 'Public DNS name not available']
     Export:
       Name: !Sub '${AWS::StackName}-PublicDNSName'
