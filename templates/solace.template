@@ -47,7 +47,7 @@ Metadata:
       NumberOfAZs:
         default: Number of Availability Zones
       BootDiskSize:
-        default: Boot Disk Capacity (GiB)ELE
+        default: Boot Disk Capacity (GiB)
       MaxClientConnections:
         default: Maximum Number of Client Connections
       MaxQueueMessages:
@@ -67,7 +67,7 @@ Metadata:
       UsePrivateSubnets:
         default: Use private subnets
       VPCAccessOnly:
-        default: VPC access only
+        default: VPC internal access only
       VPCID:
         default: VPC ID
       PrivateSubnetIDs:
