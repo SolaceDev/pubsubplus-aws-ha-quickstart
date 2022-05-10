@@ -113,7 +113,7 @@ Resources:
         CreatePrivateSubnets: !Ref 'CreatePrivateSubnets'
         KeyPairName: !Ref 'KeyPairName'
         NumberOfAZs: !Ref 'NumberOfAZs'
-        InstanceTenancy: "default"
+        VPCTenancy: "default"
   BastionHostRole:
     Type: 'AWS::IAM::Role'
     Properties:
