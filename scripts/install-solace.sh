@@ -188,11 +188,11 @@ if [[ ${disk_size} == "0" ]]; then
   #Create new volumes that the PubSub+ Message Broker container can use to consume and store data.
   docker volume create --name=jail
   docker volume create --name=var
-  docker volume create --name=adb
-  docker volume create --name=softAdb
   docker volume create --name=diagnostics
-  docker volume create --name=internalSpool
-  SPOOL_MOUNT="-v jail:/usr/sw/jail -v var:/usr/sw/var -v softAdb:/usr/sw/internalSpool/softAdb -v adb:/usr/sw/adb -v diagnostics:/var/lib/solace/diags -v internalSpool:/usr/sw/internalSpool"
+  docker volume create --name=spool
+  docker volume create --name=spool-cache
+  docker volume create --name=spool-cache-backup
+  SPOOL_MOUNT="-v jail:/var/lib/solace/jail -v var:/var/lib/solace/var -v diagnostics:/var/lib/solace/diagnostics -v spool:/var/lib/solace/spool -v spool-cache:/var/lib/solace/spool-cache -v spool-cache-backup:/var/lib/solace/spool-cache-backup"
 else
   echo "`date` Using persistent volumes"
   echo "`date` Create primary partition on new disk"
@@ -212,14 +212,14 @@ else
   mount -a
   mkdir /opt/pubsubplus/jail
   mkdir /opt/pubsubplus/var
-  mkdir /opt/pubsubplus/adb
-  mkdir /opt/pubsubplus/softAdb
   mkdir /opt/pubsubplus/diagnostics
-  mkdir /opt/pubsubplus/internalSpool
+  mkdir /opt/pubsubplus/spool
+  mkdir /opt/pubsubplus/spool-cache
+  mkdir /opt/pubsubplus/spool-cache-backup
   chown 1000001 -R /opt/pubsubplus/
   #chmod -R 777 /opt/pubsubplus
   
-  SPOOL_MOUNT="-v /opt/pubsubplus/jail:/usr/sw/jail -v /opt/pubsubplus/var:/usr/sw/var -v /opt/pubsubplus/adb:/usr/sw/adb -v /opt/pubsubplus/softAdb:/usr/sw/internalSpool/softAdb -v /opt/pubsubplus/diagnostics:/var/lib/solace/diags -v /opt/pubsubplus/internalSpool:/usr/sw/internalSpool"
+  SPOOL_MOUNT="-v /opt/pubsubplus/jail:/var/lib/solace/jail -v /opt/pubsubplus/var:/var/lib/solace/var -v /opt/pubsubplus/diagnostics:/var/lib/solace/diagnostics -v /opt/pubsubplus/spool:/var/lib/solace/spool -v /opt/pubsubplus/spool-cache:/var/lib/solace/spool-cache -v /opt/pubsubplus/spool-cache-backup:/var/lib/solace/spool-cache-backup"
 fi
 
 ############# From here execution path is different for nonHA and HA
