@@ -184,17 +184,12 @@ chown -R 1000001 $(dirname ${admin_password_file})
 chmod 700 $(dirname ${admin_password_file})
 
 if [[ ${disk_size} == "0" ]]; then
-  echo "`date` Using ephemeral volumes"
-  #Create new volumes that the PubSub+ Message Broker container can use to consume and store data.
-  docker volume create --name=jail
-  docker volume create --name=var
-  docker volume create --name=diagnostics
-  docker volume create --name=spool
-  docker volume create --name=spool-cache
-  docker volume create --name=spool-cache-backup
-  SPOOL_MOUNT="-v jail:/var/lib/solace/jail -v var:/var/lib/solace/var -v diagnostics:/var/lib/solace/diagnostics -v spool:/var/lib/solace/spool -v spool-cache:/var/lib/solace/spool-cache -v spool-cache-backup:/var/lib/solace/spool-cache-backup"
+  echo "`date` Using ephemeral volume"
+  #Create new volume that the PubSub+ Message Broker container can use to consume and store data.
+  docker volume create --name=solace
+  SPOOL_MOUNT="-v solace:/var/lib/solace"
 else
-  echo "`date` Using persistent volumes"
+  echo "`date` Using persistent volume"
   echo "`date` Create primary partition on new disk"
   (
     echo n # Add a new partition
@@ -210,16 +205,11 @@ else
   echo "UUID=${UUID} /opt/pubsubplus xfs defaults 0 0" >> /etc/fstab
   mkdir /opt/pubsubplus
   mount -a
-  mkdir /opt/pubsubplus/jail
-  mkdir /opt/pubsubplus/var
-  mkdir /opt/pubsubplus/diagnostics
-  mkdir /opt/pubsubplus/spool
-  mkdir /opt/pubsubplus/spool-cache
-  mkdir /opt/pubsubplus/spool-cache-backup
+  mkdir /opt/pubsubplus/solace
   chown 1000001 -R /opt/pubsubplus/
   #chmod -R 777 /opt/pubsubplus
   
-  SPOOL_MOUNT="-v /opt/pubsubplus/jail:/var/lib/solace/jail -v /opt/pubsubplus/var:/var/lib/solace/var -v /opt/pubsubplus/diagnostics:/var/lib/solace/diagnostics -v /opt/pubsubplus/spool:/var/lib/solace/spool -v /opt/pubsubplus/spool-cache:/var/lib/solace/spool-cache -v /opt/pubsubplus/spool-cache-backup:/var/lib/solace/spool-cache-backup"
+  SPOOL_MOUNT="-v /opt/pubsubplus/solace:/var/lib/solace"
 fi
 
 ############# From here execution path is different for nonHA and HA
