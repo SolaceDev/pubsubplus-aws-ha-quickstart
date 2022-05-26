@@ -26,7 +26,7 @@ jobs:
         echo "TEST_S3_BUCKET=solace-cf-quickstart-ghtest" >> $GITHUB_ENV
         TESTSTACKPREFIX=T$(echo $(date +%s) | rev)
         echo "TESTSTACKPREFIX=$TESTSTACKPREFIX" >> $GITHUB_ENV
-        echo "TESTSTACKNAME=$TESTSTACKPREFIX-sol-aws-ghtest-$BRANCH_NAME" >> $GITHUB_ENV
+        echo "TESTSTACKNAME=$TESTSTACKPREFIX-sol-aws-ghtest" >> $GITHUB_ENV
 
     - name: Checkout
       uses: actions/checkout@v2
