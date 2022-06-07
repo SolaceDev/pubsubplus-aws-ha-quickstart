@@ -289,6 +289,7 @@ Resources:
             - !Ref 'SolaceInternalSecurityGroup'
             - !Ref 'BrokerMemberNodesSecurityGroup'
             - !Ref 'RemoteMgmtSecurityGroup'
+            - !Ref 'ELBSecurityGroup'
         ParentStackName: !Ref 'AWS::StackName'
         PersistentStorage: !Ref 'WorkerNodeStorage'
         PersistentStorageType: !Ref 'WorkerNodeStorageType'
@@ -326,6 +327,7 @@ Resources:
             - !Ref 'SolaceInternalSecurityGroup'
             - !Ref 'BrokerMemberNodesSecurityGroup'
             - !Ref 'RemoteMgmtSecurityGroup'
+            - !Ref 'ELBSecurityGroup'
         ParentStackName: !Ref 'AWS::StackName'
         PersistentStorage: !Ref 'WorkerNodeStorage'
         PersistentStorageType: !Ref 'WorkerNodeStorageType'
@@ -455,8 +457,20 @@ Resources:
             FromPort: 22
             ToPort: 22
             CidrIp: !Ref 'RemoteAccessCIDR'
+  ELBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref 'VPCID'
+      GroupDescription: Allow Health Port to be accessed via the ELB
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5550
+          ToPort: 5550
+          CidrIp: !Ref 'RemoteAccessCIDR'
   EventBrokerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - ELBSecurityGroup
     Properties:
       VpcId: !Ref 'VPCID'
       GroupDescription: Event Broker Security Group
@@ -464,7 +478,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 5550
           ToPort: 5550
-          CidrIp: '0.0.0.0/0'
+          SourceSecurityGroupId: !Ref 'ELBSecurityGroup'
         - IpProtocol: tcp
           FromPort: 55555
           ToPort: 55555
@@ -527,11 +541,14 @@ Resources:
     DependsOn:
       - EventBrokerPrimaryStack
       - EventBrokerBackupStack
+      - ELBSecurityGroup
     Condition: UsePrivateSubnetsCondition
     Properties:
       Scheme: internet-facing
       Subnets: !Ref 'PublicSubnetIDs'
       Type: network
+      SecurityGroups:
+        - !Ref 'ELBSecurityGroup'
   Port55555NetworkLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
@@ -565,7 +582,23 @@ Resources:
       - Id: !GetAtt 'EventBrokerPrimaryStack.Outputs.EC2ID'
         Port: 55003
       - Id: !GetAtt 'EventBrokerBackupStack.Outputs.EC2ID'
-        Port: 55003
+  Port5550NetworkLoadBalancerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - ELB
+    Condition: UsePrivateSubnetsCondition
+    Properties:
+      Port: 5550
+      Protocol: TCP
+      VpcId: !Ref 'VPCID'
+      HealthCheckPath: '/health-check/guaranteed-active'
+      HealthCheckPort: '5550'
+      HealthCheckProtocol: 'HTTP'
+      Targets:
+      - Id: !GetAtt 'EventBrokerPrimaryStack.Outputs.EC2ID'
+        Port: 5550
+      - Id: !GetAtt 'EventBrokerBackupStack.Outputs.EC2ID'
+        Port: 5550
   Port55443NetworkLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn:
