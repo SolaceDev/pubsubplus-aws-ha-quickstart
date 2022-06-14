@@ -236,7 +236,6 @@ Parameters:
       (e.g. subnet-4b8d329f,subnet-bd73afc8); VPC must exist with proper configuration
       for Solace cluster access.
       IGNORED if 'VPC access only' AND  'use private subnets' both true but even in this case must provide at least one item
-    Default: ''
     Type: List<AWS::EC2::Subnet::Id>
   VPCID:
     Description: ID of the VPC (e.g. vpc-0343606e)
