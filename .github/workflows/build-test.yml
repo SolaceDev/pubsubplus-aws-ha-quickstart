@@ -62,6 +62,7 @@ jobs:
         export BUCKETREGION=`aws s3api get-bucket-location --bucket ${{ env.TEST_S3_BUCKET }} | grep LocationConstraint | awk -F' ' '{print $NF}' | tr -d '"'`
         sed -i "s@SolaceStackRegionNAME@${AWS_DEFAULT_REGION}@g" ci/solace-aws-ha-3az-prod-test.json
         sed -i "s@SolaceBucketRegionNAME@${BUCKETREGION}@g" ci/solace-aws-ha-3az-prod-test.json
+        sed -i "s@SolaceBranchNAME@${{ env.BRANCH_NAME }}@g" ci/solace-aws-ha-3az-prod-test.json
         aws s3 sync . s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/${{ env.BRANCH_NAME }} --acl public-read
 
     - name: Test with production deployment option (create public subnet)
