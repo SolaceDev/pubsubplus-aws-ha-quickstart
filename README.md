@@ -2,7 +2,8 @@
 
 # Install and Configure Solace PubSub+ Software Event Broker in an HA Tuple using AWS Cloud Formation
 
-This project is a best practice template intended for development and demo purposes. The tested and recommended Solace PubSub+ Software Event Broker version is 9.12.
+This project is a best practice template intended for development and demo purposes. The tested and recommended Solace PubSub+ Software Event Broker version is 9.13.
+It is important to note that for earlier versions of Solace PubSub+ Software Event Broker, it is recommended that you use v3.1.0 of the quickstart. 
 
 This document provides a quick getting started guide to install a Solace PubSub+ software event broker deployment in Amazon Web Services cloud computing platform.
 
@@ -130,13 +131,24 @@ The next screen will allow you to fill in the details for the selected launch op
 
 If you are deploying into an existing VPC, most of the parameters are the same as for the new VPC option with the following additions:
 
-| Parameter label (name)     | Default   | Description                                                        |
-|----------------------------|-----------|--------------------------------------------------------------------|
-| **Network Configuration**  |           |                                                                    |
-| VPC ID (VPCID)             | _Requires_ _input_ | Choose the ID of your existing VPC stack - for a value, refer to the `VPCID` in the "VPCStack"'s `Outputs` tab in the AWS CloudFormation view (e.g., vpc-0343606e). This VPC must exist with the proper configuration for PubSub+ cluster access. |
-| Public Subnet IDs (Public SubnetIDs) | _Requires_ _input_ | Choose public subnet IDs in your existing VPC from this list (e.g., subnet-4b8d329f,subnet-bd73afc8,subnet-a01106c2), matching your deployment architecture. |
-| Private Subnet IDs (PrivateSubnetIDs) | _Requires_ _input_ | Choose private subnet IDs in your existing VPC from this list (e.g., subnet-4b8d329f,subnet-bd73afc8,subnet-a01106c2), matching your deployment architecture. Note: This parameter is ignored if you set the Use private subnets parameter to false, however you must still provide at least one item from the list (any) to satisfy parameter validation. |
-| Security group allowed to access console SSH (SSHSecurityGroupID) | _Requires_ _input_ | The ID of the security group in your existing VPC that is allowed to access the console via SSH  - for a value, refer to the `BastionSecurityGroupID` in the "BastionStack"'s `Outputs` tab in the AWS CloudFormation view (e.g., sg-7f16e910). Note: This parameter is ignored if you set the Use private subnets parameter to false. |
+| Parameter label (name)                                            | Default            | Description                                                                                                                                                                                                                                                                                                                                                |
+|-------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Network Configuration**                                         |                    |                                                                                                                                                                                                                                                                                                                                                            |
+| VPC ID (VPCID)                                                    | _Requires_ _input_ | Choose the ID of your existing VPC stack - for a value, refer to the `VPCID` in the "VPCStack"'s `Outputs` tab in the AWS CloudFormation view (e.g., vpc-0343606e). This VPC must exist with the proper configuration for PubSub+ cluster access.                                                                                                          |
+| Public Subnet IDs (Public SubnetIDs)                              | _Requires_ _input_ | Choose public subnet IDs in your existing VPC from this list (e.g., subnet-4b8d329f,subnet-bd73afc8,subnet-a01106c2), matching your deployment architecture.                                                                                                                                                                                               |
+| Private Subnet IDs (PrivateSubnetIDs)                             | _Requires_ _input_ | Choose private subnet IDs in your existing VPC from this list (e.g., subnet-4b8d329f,subnet-bd73afc8,subnet-a01106c2), matching your deployment architecture. Note: This parameter is ignored if you set the Use private subnets parameter to false, however you must still provide at least one item from the list (any) to satisfy parameter validation. |
+| Security group allowed to access console SSH (SSHSecurityGroupID) | _Requires_ _input_ | The ID of the security group in your existing VPC that is allowed to access the console via SSH  - for a value, refer to the `BastionSecurityGroupID` in the "BastionStack"'s `Outputs` tab in the AWS CloudFormation view (e.g., sg-7f16e910). Note: This parameter is ignored if you set the Use private subnets parameter to false.                     |
+
+### Launch option 3: Parameters for deploying into an existing VPC with only private subnets
+
+If you are deploying into an existing private VPC, then you will need the third deployment option. This allows broker nodes and services to only be accessed from within the private VPC. If both "VPC internal access only" and "Use private subnets" are set to `true`. It uses most of the parameters from the first two options.
+
+| Parameter label (name)                                            | Default            | Description                                                                                                                                                                                                                                                                                                                                                |
+|-------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Network Configuration**                                         |                    |                                                                                                                                                                                                                                                                                                                                                            |
+| VPC Internal access only (VPCAccessOnly)                          | false              | Whether broker nodes and services are only exposed internally to the VPC. Only applicable if private subnets used.                                                                                                                                                                                                                                         |
+| Use private subnets (UsePrivateSubnets)                           | true               | Whether to deploy broker nodes into Private Subnets. Note: When this parameter and `VPCAccessOnly` are set to `true` it will ensure broker nodes are only accessible inside the VPC `VPCID`                                                                                                                                                                |
+
 
 <br/><br/>
 
@@ -212,6 +224,14 @@ To test data traffic though the newly created event broker instances, [visit the
 For data, the event broker cluster can be accessed through the ELB’s public DNS host name and the API or protocol specific port. 
 
 ![alt text](/images/solace_tutorial.png "getting started publish/subscribe")
+
+# Updating or Upgrading the HA cluster
+
+It is important to note that, AWS HA quickstart will not be used to modify an existing deployment. That is, you can not update, one deployment  configuration to another with the quickstart.
+You can not for instance migrate PubSub+ broker HA nodes in public VPC to a private VPC by running the AWS HA quickstart. You can also, not upgrade or downgrade docker images or other configurations after installation. 
+It is strictly for installation and has no update workflow.
+
+
 
 ## Contributing
 
