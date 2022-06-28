@@ -68,8 +68,8 @@ The Docker image reference can be:
 
 **Step 2**: Go to the AWS Cloud Formation service and launch the template. The following links are for your convenience and take you directly to the event broker templates.
 
-**Note:** Using `Launch Quick Start (for new VPC)` launches the AWS infrastructure stacks needed with the event broker stack on top (recommended). However, if you have previously launched this Quick Start within your target region and would like to re-deploy just the event broker stack on top of the existing AWS infrastructure stacks, you can use `Launch Quick Start (for existing VPC)`. 
-This approach of deployment of the PubSub+ Event Broker is associated with Launch Option 2 and 3, similarly `Launch Quick Start (for new VPC)` is for Launch Option 1.
+**Note:** Using `Launch Quick Start (for new VPC)` launches the AWS infrastructure stacks needed with the event broker stack on top (recommended)[-see Launch Option 1 in the next section of this document](#launch-option-1-parameters-for-deploying-into-a-new-vpc). However, if you have already have a VPC or previously launched this Quick Start within your target region and would like to re-deploy just the event broker stack on top of the existing AWS infrastructure stacks, you can use `Launch Quick Start (for existing VPC)`. 
+This approach of deployment of the PubSub+ Event Broker is associated with Launch [Option 2](#launch-option-2-parameters-for-deploying-into-an-existing-vpc-with-publicly-accessible-broker-services) and [3](#launch-option-3-parameters-for-deploying-into-an-existing-vpc-with-broker-services-accessible-internally-within-vpc-only).
 
 <a href="https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Solace-HA&templateURL=https://s3.amazonaws.com/solace-products/pubsubplus-aws-ha-quickstart/latest/templates/solace-master.template" target="_blank">
     <img src="/images/launch-button-new.png"/>
