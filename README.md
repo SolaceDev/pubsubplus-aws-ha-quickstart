@@ -13,11 +13,15 @@ This Quick Start template installs Solace PubSub+ Software Event Broker in fault
 
 To learn more about event broker redundancy see the [Redundancy Documentation](https://docs.solace.com/Features/SW-Broker-Redundancy-and-Fault-Tolerance.htm ).  If you are not familiar with Solace PubSub+ or high-availability configurations it is recommended that you review this document. 
 
-![alt text](/images/Solace-AWS-HA-PoC-2AZ.png "Proof of Concept Environment for Solace PubSub+ Software Event Broker")
-
 Alternatively this Quick Start can create event brokers in an environment suitable for Proof-of-Concept testing where loss of an AWS Availability Zone will not cause loss of access to mission critical data.
 
-To learn more about connectivity to the HA redundancy group see the AWS [VPC Gateway Documentation](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Internet_Gateway.html ).
+![alt text](/images/Solace-AWS-HA-PoC-2AZ.png "Proof of Concept Environment for Solace PubSub+ Software Event Broker")
+
+There is another option where the Solace PubSub+ Software Event Broker is deployed in private VPC with internal facing network load balancer (LB). 
+This options ensures the broker services are not exposed externally and only accessible in the private VPC selected during deployment.
+
+![alt text](/images/Solace-AWS-HA-Prod-Private-VPC-3AZ.png "Proof of Concept Environment for Solace PubSub+ Software Event Broker with Internally Facing Broker Services")
+
 
 # Minimum Resource Requirements
 
@@ -64,7 +68,8 @@ The Docker image reference can be:
 
 **Step 2**: Go to the AWS Cloud Formation service and launch the template. The following links are for your convenience and take you directly to the event broker templates.
 
-**Note:** Using `Launch Quick Start (for new VPC)` launches the AWS infrastructure stacks needed with the event broker stack on top (recommended). However, if you have previously launched this Quick Start within your target region and would like to re-deploy just the event broker stack on top of the existing AWS infrastructure stacks, you can use `Launch Quick Start (for existing VPC)`.
+**Note:** Using `Launch Quick Start (for new VPC)` launches the AWS infrastructure stacks needed with the event broker stack on top (recommended). However, if you have previously launched this Quick Start within your target region and would like to re-deploy just the event broker stack on top of the existing AWS infrastructure stacks, you can use `Launch Quick Start (for existing VPC)`. 
+This approach of deployment of the PubSub+ Event Broker is associated with Launch Option 2 and 3, similarly `Launch Quick Start (for new VPC)` is for Launch Option 1.
 
 <a href="https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Solace-HA&templateURL=https://s3.amazonaws.com/solace-products/pubsubplus-aws-ha-quickstart/latest/templates/solace-master.template" target="_blank">
     <img src="/images/launch-button-new.png"/>
@@ -127,7 +132,7 @@ The next screen will allow you to fill in the details for the selected launch op
 | Quick Start S3 bucket region (QSS3BucketRegion) | us-east-1 | The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value. |
 | Quick Start S3 Key Prefix (QSS3KeyPrefix) | pubsubplus-aws-ha-quickstart/latest/ | Specifies the S3 folder for your copy of Quick Start assets. Change this parameter if you decide to customize or extend the Quick Start for your own use. |
 
-### Launch option 2: Parameters for deploying into an existing VPC
+### Launch option 2: Parameters for deploying into an existing VPC with publicly accessible broker services.
 
 If you are deploying into an existing VPC, most of the parameters are the same as for the new VPC option with the following additions:
 
@@ -139,7 +144,7 @@ If you are deploying into an existing VPC, most of the parameters are the same a
 | Private Subnet IDs (PrivateSubnetIDs)                             | _Requires_ _input_ | Choose private subnet IDs in your existing VPC from this list (e.g., subnet-4b8d329f,subnet-bd73afc8,subnet-a01106c2), matching your deployment architecture. Note: This parameter is ignored if you set the Use private subnets parameter to false, however you must still provide at least one item from the list (any) to satisfy parameter validation. |
 | Security group allowed to access console SSH (SSHSecurityGroupID) | _Requires_ _input_ | The ID of the security group in your existing VPC that is allowed to access the console via SSH  - for a value, refer to the `BastionSecurityGroupID` in the "BastionStack"'s `Outputs` tab in the AWS CloudFormation view (e.g., sg-7f16e910). Note: This parameter is ignored if you set the Use private subnets parameter to false.                     |
 
-### Launch option 3: Parameters for deploying into an existing VPC with only private subnets
+### Launch option 3: Parameters for deploying into an existing VPC with broker services accessible internally within VPC only.
 
 If you are deploying into an existing private VPC, then you will need the third deployment option. This allows broker nodes and services to only be accessed from within the private VPC. If both "VPC internal access only" and "Use private subnets" are set to `true`. It uses most of the parameters from the first two options.
 
