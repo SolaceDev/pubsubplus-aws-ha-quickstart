@@ -19,7 +19,7 @@ jobs:
       id: extract_branch
     - name: Extract branch name for PR
       if: github.event_name == 'pull_request'
-      run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr _. -)" >> $GITHUB_ENV
     - name: Set env
       run: |
         echo "AWS_DEFAULT_REGION=eu-west-1" >> $GITHUB_ENV
