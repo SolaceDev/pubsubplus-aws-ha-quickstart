@@ -373,3 +373,4 @@ Resources:
             - - !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
               - !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
