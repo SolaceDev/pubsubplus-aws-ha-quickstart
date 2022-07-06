@@ -262,7 +262,6 @@ Resources:
         AvailabilityZones: !Join
           - ','
           - !Ref 'AvailabilityZones'
-        CreatePrivateSubnets: !Ref 'CreatePrivateSubnets'
         NumberOfAZs: !Ref 'NumberOfAZs'
   BastionHostRole:
     Type: 'AWS::IAM::Role'
