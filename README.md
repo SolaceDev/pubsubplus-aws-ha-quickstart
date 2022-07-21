@@ -103,7 +103,7 @@ The next screen will allow you to fill in the details for the selected launch op
 
 <br/><br/>
 
-### Launch option 1: Parameters for deploying into a new VPC
+### Launch option 1: Parameters for deploying into a new VPC with publicly accessible broker services
 
 | Parameter label (name)     | Default   | Description                                                        |
 |----------------------------|-----------|--------------------------------------------------------------------|
@@ -147,7 +147,7 @@ If you are deploying into an existing VPC, most of the parameters are the same a
 
 ### Launch option 3: Parameters for deploying into an existing VPC with broker services accessible internally within VPC only.
 
-If you are deploying into an existing private VPC, then you will need the third deployment option. This allows broker nodes and services to only be accessed from within the private VPC. If both "VPC internal access only" and "Use private subnets" are set to `true`. It uses most of the parameters from the first two options.
+If you are deploying into an existing private VPC, then you will need the third deployment option. This allows broker nodes and services to only be accessed from within the private VPC. Both "VPC internal access only" and "Use private subnets" parameters needs to be set to `true` for the broker nodes and services to only be accessible internally within VPC. It uses most of the parameters from the first two options.
 
 | Parameter label (name)                                            | Default            | Description                                                                                                                                                                                                                                                                                                                                                |
 |-------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
