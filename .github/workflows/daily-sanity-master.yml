@@ -25,6 +25,7 @@ jobs:
         TESTSTACKPREFIX=T$(echo $(date +%s) | rev)
         echo "TESTSTACKPREFIX=$TESTSTACKPREFIX" >> $GITHUB_ENV
         echo "TESTSTACKNAME=$TESTSTACKPREFIX-sol-aws-ghtest" >> $GITHUB_ENV
+        echo "BRANCH_NAME=latest" >> $GITHUB_ENV
 
     - name: Recourse submodules
       run: |
@@ -58,6 +59,7 @@ jobs:
         export BUCKETREGION=`aws s3api get-bucket-location --bucket ${{ env.TEST_S3_BUCKET }} | grep LocationConstraint | awk -F' ' '{print $NF}' | tr -d '"'`
         sed -i "s@SolaceStackRegionNAME@${AWS_DEFAULT_REGION}@g" ci/solace-aws-ha-3az-prod-test.json
         sed -i "s@SolaceBucketRegionNAME@${BUCKETREGION}@g" ci/solace-aws-ha-3az-prod-test.json
+        sed -i "s@SolaceBranchNAME@${{ env.BRANCH_NAME }}@g" ci/solace-aws-ha-3az-prod-test.json
         aws s3 sync . s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/latest --acl public-read
 
     - name: Test with production deployment option (create public subnet)
