@@ -296,7 +296,6 @@ Resources:
   BastionStack:
     Type: AWS::CloudFormation::Stack
     Condition: UsePrivateSubnets
-    DependsOn: VPCStack
     Properties:
       TemplateURL:
         !Sub
