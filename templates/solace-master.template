@@ -282,6 +282,9 @@ Resources:
             Statement:
               - Action:
                   - s3:GetObject
+                  - s3:GetBucketLocation
+                  - s3:ListBucket
+                  - s3:PutObject
                 Resource: !Sub
                   - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
                   - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
@@ -297,23 +300,24 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/templates/linux-bastion-entrypoint-existing-vpc.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         AlternativeIAMRole: !Ref BastionHostRole
-        BastionInstanceType: t2.micro
+        BastionInstanceType: t3.micro
         EnableBanner: 'true'
         BastionBanner: !Sub
           - s3://${S3Bucket}/${QSS3KeyPrefix}scripts/solace-banner.txt
           - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         NumBastionHosts: '2'
         KeyPairName: !Ref 'KeyPairName'
+        OndemandPercentage: 100
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
         PublicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         QSS3BucketName: !Ref QSS3BucketName
         QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Sub ${QSS3KeyPrefix}submodules/quickstart-linux-bastion/
+        QSS3KeyPrefix: !Sub ${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/
         RemoteAccessCIDR: !Ref 'SSHAccessCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
   SolaceStack:

@@ -6,3 +6,6 @@
 	path = submodules/quickstart-linux-bastion
 	url = git@github.com:aws-quickstart/quickstart-linux-bastion.git
 	branch = main
+[submodule "submodules/cfn-ps-linux-bastion"]
+	path = submodules/cfn-ps-linux-bastion
+	url = git@github.com:aws-ia/cfn-ps-linux-bastion.git
