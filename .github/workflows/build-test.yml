@@ -63,7 +63,10 @@ jobs:
         sed -i "s@SolaceStackRegionNAME@${AWS_DEFAULT_REGION}@g" ci/solace-aws-ha-3az-prod-test.json
         sed -i "s@SolaceBucketRegionNAME@${BUCKETREGION}@g" ci/solace-aws-ha-3az-prod-test.json
         sed -i "s@SolaceBranchNAME@${{ env.BRANCH_NAME }}@g" ci/solace-aws-ha-3az-prod-test.json
-        aws s3 sync . s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/${{ env.BRANCH_NAME }} --acl public-read
+        aws s3 sync images s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/${{ env.BRANCH_NAME }} --acl public-read
+        aws s3 sync scripts s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/${{ env.BRANCH_NAME }} --acl public-read
+        aws s3 sync submodules s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/${{ env.BRANCH_NAME }} --acl public-read
+        aws s3 sync templates s3://${{ env.TEST_S3_BUCKET }}/solace/eventbroker/${{ env.BRANCH_NAME }} --acl public-read
 
     - name: Test with production deployment option (create public subnet)
       run: |
