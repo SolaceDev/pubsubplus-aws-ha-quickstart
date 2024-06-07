@@ -51,7 +51,7 @@ jobs:
         aws cloudformation validate-template --template-body file://templates/solace-master.template
         aws cloudformation validate-template --template-body file://templates/solace.template
         aws cloudformation validate-template --template-body file://templates/nodecreate.template
-        aws s3 mb s3://${{ env.TEST_S3_BUCKET }} || echo "s3 bucket already existed"
+        aws s3 mb s3://${{ env.TEST_S3_BUCKET }} || echo "s3 bucket already existed."
 
     - name: Copy test artifacts to test S3 bucket
       run: |
